@@ -6,22 +6,7 @@ function loadDatabaseSettings($pathjs){
 }
 
 function getToken(){
-        //creamos el objeto fecha y obtuvimos la cantidad de segundos desde el 1ª enero 1970
-        $fecha = date_create();
-        $tiempo = date_timestamp_get($fecha);
-        //vamos a generar un numero aleatorio
-        $numero = mt_rand();
-        //vamos a generar ua cadena compuesta
-        $cadena = ''.$numero.$tiempo;
-        // generar una segunda variable aleatoria
-        $numero2 = mt_rand();
-        // generar una segunda cadena compuesta
-        $cadena2 = ''.$numero.$tiempo.$numero2;
-        // generar primer hash en este caso de tipo sha1
-        $hash_sha1 = sha1($cadena);
-        // generar segundo hash de tipo MD5
-        $hash_md5 = md5($cadena2);
-        return substr($hash_sha1,0,20).$hash_md5.substr($hash_sha1,20);
+        return bin2hex(random_bytes(32));
 }
 
 require 'vendor/autoload.php';
