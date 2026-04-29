@@ -1,0 +1,21 @@
+# Local backups
+*.bak
+*.backup
+*.old
+index.php.bak_*
+
+# Runtime folders/files
+tmp/
+img/
+
+# Environment and local secrets
+.env
+*.pem
+*.key
+*.crt
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
