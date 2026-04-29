@@ -68,15 +68,18 @@ $f3->route('POST /Registro',
                         echo '{"R":-1}';
                         return;
                 }
+
+                $passwordHash = password_hash($jsB['password'], PASSWORD_DEFAULT);
+
                 // TODO validar correo en json
                 // TODO Control de error de la $DB
                 try {
                         $R = $db->exec(
-                                'insert into Usuario values(null,:uname,:email,md5(:password))',
+                                'insert into Usuario values(null,:uname,:email,:password)',
                                 array(
                                         ':uname' => $jsB['uname'],
                                         ':email' => $jsB['email'],
-                                        ':password' => $jsB['password']
+                                        ':password' => $passwordHash
                                 )
                         );
                 } catch (Exception $e) {
@@ -126,10 +129,9 @@ $f3->route('POST /Login',
                 // TODO Control de error de la $DB
                 try {
                         $R = $db->exec(
-                                'Select id from Usuario where uname = :uname and password = md5(:password);',
+                                'Select id,password from Usuario where uname = :uname;',
                                 array(
-                                        ':uname' => $jsB['uname'],
-                                        ':password' => $jsB['password']
+                                        ':uname' => $jsB['uname']
                                 )
                         );
                 } catch (Exception $e) {
@@ -140,6 +142,12 @@ $f3->route('POST /Login',
                         echo '{"R":-3}';
                         return;
                 }
+
+                if (!password_verify($jsB['password'], $R[0]['password'])) {
+                        echo '{"R":-3}';
+                        return;
+                }
+
                 $T = getToken();
                 //file_put_contents('/tmp/log','insert into AccesoToken values('.$R[0].',"'.$T.'",now())');
                 $db->exec(
